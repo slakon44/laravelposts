@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User; //195
 use App\Role; //200 - create user
+use App\Photo; //208 - create user
 use App\Http\Requests\UsersRequest; //201 - stworzenie request w //201
 use App\Http\Requests;
 
@@ -49,8 +50,25 @@ class AdminUsersController extends Controller
         //198
         //return $request->all();
         //201 php artisan make:request UsersRequest
-       User::create($request->all()); //204
-       return redirect('/admin/users'); //204
+       //User::create($request->all()); //204
+
+        $input = $request->all(); //206
+        if($file = $request->file('photo_id')){ //206
+            //return "photo exist"; ///206
+            //207
+            $name = time().$file->getClientOriginalName(); //207
+            $file->move('images', $name); //207
+            $photo = Photo::create(['file'=>$name]); //207
+            $input['photo_id'] = $photo->id; //207
+        }
+
+        $input['password'] = bcrypt($request->password); //208
+        User::create($input); //208
+
+
+
+
+       //return redirect('/admin/users'); //204
     }
 
     /**

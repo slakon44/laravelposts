@@ -28,4 +28,9 @@ class User extends Authenticatable
         return $this->belongsTo('App\Role');
 
     }
+
+    public function photo(){ //205
+        return $this->belongsTo('App\Photo');
+        //205 a potem php atrisan migrate
+    }
 }
