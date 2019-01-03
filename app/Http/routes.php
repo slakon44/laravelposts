@@ -19,8 +19,11 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
-Route::resource('admin/users', 'AdminUsersController'); //189
+
 
 Route::get('/admin', function(){
     return view('admin.index');//193
 });
+
+Route::resource('admin/users', 'AdminUsersController'); //189
+//nie trzeba Route::resource('admin/users/create','AdminUsersController'); //196
