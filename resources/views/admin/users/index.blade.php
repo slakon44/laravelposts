@@ -8,6 +8,7 @@
         <thead>
         <tr>
             <th scope="col">Id</th>
+            <th scope="col">Photo</th> <!-- //209-->
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Role</th>
@@ -20,8 +21,9 @@
         @if($users)
             @foreach($users as $user)
         <tr>
-            <th scope="row">{{$user->id}}</th>
-            <td>{{$user->name}}</td>
+            <td scope="row">{{$user->id}}</td>
+            <td> <img height="50" src="{{$user->photo ? $user->photo->file:"http://placehold.it/50x50"}}" class="img-responsive img-rounded"></td><!-- //211 -->
+            <td><a href="{{route('admin.users.edit', $user->id)}}">{{$user->name}}</a></td>
             <td>{{$user->email}}</td>
             <td>{{$user->role['name']}}</td>
             <td>{{$user->is_active==1 ? 'Active':'No Active'}}</td> <!--//196 -->

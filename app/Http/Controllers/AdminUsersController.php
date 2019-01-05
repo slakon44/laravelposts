@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsersEditRequest; //213 - dodatkowe zapytanie - przy updatcie uzytkownika
 use Illuminate\Http\Request;
 use App\User; //195
 use App\Role; //200 - create user
@@ -47,6 +48,14 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request) //201 dodałem UsersRequest
     {
+
+        if(trim($request->password) == ''){ //214
+            $input = $request->except('password'); //214
+        }
+        else{
+            $input = $request->all(); //214
+            $input['password'] = bcrypt($request->password);
+        }
         //198
         //return $request->all();
         //201 php artisan make:request UsersRequest
@@ -62,13 +71,13 @@ class AdminUsersController extends Controller
             $input['photo_id'] = $photo->id; //207
         }
 
-        $input['password'] = bcrypt($request->password); //208
+        //214 usuwam  $input['password'] = bcrypt($request->password); //208
         User::create($input); //208
 
 
 
 
-       //return redirect('/admin/users'); //204
+       return redirect('/admin/users'); //204
     }
 
     /**
@@ -91,6 +100,11 @@ class AdminUsersController extends Controller
     public function edit($id)
     {
         //
+        //210
+        $user = User::findOrFail($id);
+        $roles = Role::lists('name','id')->all();
+        return view('admin.users.edit', compact('user', 'roles')); //210
+
     }
 
     /**
@@ -100,9 +114,31 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id) //212 zmieniam na usersrequest (jest obsluga wtedy błędów
     {
         //
+        $user = User::findOrFail($id);//212
+
+        if(trim($request->password) == ''){ //214
+            $input = $request->except('password'); //214
+        }
+        else{
+            $input = $request->all(); //214
+            $input['password'] = bcrypt($request->password);
+        }
+
+
+
+        //return $request->all(); //212
+       // $input = $request->all();
+        if($file = $request->file('photo_id')){ //212
+            $name = time().$file->getClientOriginalName();
+            $file->move('images', $name);
+            $photo = Photo::create(['file'=>$name]);//213
+            $input['photo_id'] = $photo->id;//213
+        }
+        $user->update($input);
+        return redirect('/admin/users');
     }
 
     /**
