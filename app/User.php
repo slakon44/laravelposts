@@ -33,4 +33,21 @@ class User extends Authenticatable
         return $this->belongsTo('App\Photo');
         //205 a potem php atrisan migrate
     }
+
+    public function setPasswordAttribute($password){ //216
+        if(!empty($password)){
+            $this -> attributes['password'] = bcrypt($password);
+        }
+    }
+
+    public function isAdmin(){
+        if($this->role->name == "administrator" && $this->is_active == 1){ //220
+            return true;
+        }
+        return false;
+    }
+    public function posts(){ //224 tworzymy relacje z postami
+        return $this->hasMany('App\Post'); //224 i ide do Post.php i tam daje funkcję user
+
+    }
 }

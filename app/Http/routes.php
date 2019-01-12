@@ -25,5 +25,14 @@ Route::get('/admin', function(){
     return view('admin.index');//193
 });
 
-Route::resource('admin/users', 'AdminUsersController'); //189
+//215 przensoze ponizej Route::resource('admin/users', 'AdminUsersController'); //189
 //nie trzeba Route::resource('admin/users/create','AdminUsersController'); //196
+
+Route::group(['middleware'=>'admin'], function (){ //215
+   Route::resource('admin/users', 'AdminUsersController'); // 215
+
+   Route::resource('admin/posts', 'AdminPostsController'); // 221 - towrzymy route i potem controler
+    //php artisan make:controller --resource AdminPostsController //221
+
+});
+

@@ -9,6 +9,7 @@ use App\Role; //200 - create user
 use App\Photo; //208 - create user
 use App\Http\Requests\UsersRequest; //201 - stworzenie request w //201
 use App\Http\Requests;
+use Illuminate\Support\Facades\Session;
 
 class AdminUsersController extends Controller
 {
@@ -150,5 +151,14 @@ class AdminUsersController extends Controller
     public function destroy($id)
     {
         //
+       // return "DESTROY";//217
+        //User::findOrFail($id)->delete();//217
+        $user = User::findOrFail($id); //218
+        unlink(public_path(). $user->photo->file);
+        $user->delete();
+
+        Session::flash('deleted_user','The user has been deleted');//218
+
+        return redirect('admin/users');//217
     }
 }
